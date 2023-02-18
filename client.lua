@@ -83,6 +83,7 @@ end
 
 
 -- Crouching --
+---Resets the crouch effect (clipsets etc.)
 local function ResetCrouch()
     local playerPed = PlayerPedId()
 
@@ -101,6 +102,7 @@ local function ResetCrouch()
     RemoveAnimSet("move_ped_crouched")
 end
 
+---Starts the crouch loop
 local function CrouchThread()
     CreateThread(function()
         while isCrouched do
@@ -137,6 +139,7 @@ local function CrouchThread()
     end)
 end
 
+---Starts crouching
 local function StartCrouch()
     isCrouched = true
     LoadClipSet("move_ped_crouched")
@@ -171,6 +174,7 @@ local function AttemptCrouch(playerPed)
     end
 end
 
+---Called when the crouch key is pressed
 local function CrouchKeyPressed()
     -- If we already are doing something, then don't continue
     if inAction then
@@ -265,6 +269,10 @@ local function PlayExitCrawlAnims(forceEnd)
     end
 end
 
+---Crawls one "step" forward/backward
+---@param playerPed number
+---@param type string
+---@param direction string
 local function Crawl(playerPed, type, direction)
     isCrawling = true
 
@@ -286,6 +294,8 @@ local function Crawl(playerPed, type, direction)
     end)
 end
 
+---Flips the player when crawling
+---@param playerPed number
 local function CrawlFlip(playerPed)
     inAction = true
     local heading = GetEntityHeading(playerPed)
@@ -307,6 +317,7 @@ local function CrawlFlip(playerPed)
     inAction = false
 end
 
+---The crawl loop
 local function CrawlThread()
     CreateThread(function()
         Wait(400)
@@ -400,6 +411,7 @@ local function CrawlThread()
     end)
 end
 
+---Gets called when the crawl key is pressed
 local function CrawlKeyPressed()
     -- If we already are doing something, then don't continue
     if inAction then
@@ -497,7 +509,7 @@ end)
 
 
 -- Exports --
----Returns weather or not the player is crouched
+---Returns if player is crouched
 ---@return boolean
 local function IsPlayerCrouched()
 	return isCrouched
@@ -509,7 +521,7 @@ local function IsPlayerProne()
 	return isProne
 end
 
----Returns if the player is crawling (only when moving forward/backwards)
+---Returns if the player is crawling (only when moving forward/backward)
 ---@return boolean
 local function IsPlayerCrawling()
 	return isCrawling
