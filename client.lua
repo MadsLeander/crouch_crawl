@@ -156,7 +156,7 @@ local function StartCrouch()
         SetFollowPedCamViewMode(0) -- THIRD_PERSON_NEAR
     end
 
-    walkstyle = GetPedWalkstyle(playerPed)
+    walkstyle = GetPedWalkstyle(playerPed) or walkstyle
     SetPedMovementClipset(playerPed, "move_ped_crouched", 0.6)
     SetPedStrafeClipset(playerPed, "move_ped_crouched_strafing")
 
