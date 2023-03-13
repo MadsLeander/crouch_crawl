@@ -159,6 +159,7 @@ local walkStyles = {
     [-1561136569] = "AMBIENT_WALK_VARIATION_F_SAD_A",
     [381019249] = "HUSKY@MOVE",
     [-289665739] = "RETRIEVER@MOVE",
+    [-1914955993] = "move_p_m_zero"
 }
 
 function GetPedWalkstyle(ped)
