@@ -103,40 +103,38 @@ local function ResetCrouch()
 end
 
 ---Starts the crouch loop
-local function CrouchThread()
-    CreateThread(function()
-        while isCrouched do
-            local playerPed = PlayerPedId()
+local function CrouchLoop()
+    while isCrouched do
+        local playerPed = PlayerPedId()
 
-            -- Checks if the player is falling, in vehicle, dead etc.
-            if not CanPlayerCrouchCrawl(playerPed) then
-                isCrouched = false
-                break
-            end
-
-            -- Limit the speed that the player can walk when aiming
-            if IsPedAiming(playerPed) then
-                SetPedMaxMoveBlendRatio(playerPed, 0.15)
-            end
-
-            -- This blocks the ped from standing up and playing idle anims (this needs to be looped)
-            SetPedCanPlayAmbientAnims(playerPed, false)
-
-            -- Disables "INPUT_DUCK" and blocks action mode
-            DisableControlAction(0, 36, true)
-            if IsPedUsingActionMode(playerPed) == 1 then
-                SetPedUsingActionMode(playerPed, false, -1, "DEFAULT_ACTION")
-            end
-
-            -- Disable first person
-            DisableFirstPersonCamThisFrame()
-
-            Wait(0)
+        -- Checks if the player is falling, in vehicle, dead etc.
+        if not CanPlayerCrouchCrawl(playerPed) then
+            isCrouched = false
+            break
         end
 
-        -- Reset walk style and ped variables
-        ResetCrouch()
-    end)
+        -- Limit the speed that the player can walk when aiming
+        if IsPedAiming(playerPed) then
+            SetPedMaxMoveBlendRatio(playerPed, 0.15)
+        end
+
+        -- This blocks the ped from standing up and playing idle anims (this needs to be looped)
+        SetPedCanPlayAmbientAnims(playerPed, false)
+
+        -- Disables "INPUT_DUCK" and blocks action mode
+        DisableControlAction(0, 36, true)
+        if IsPedUsingActionMode(playerPed) == 1 then
+            SetPedUsingActionMode(playerPed, false, -1, "DEFAULT_ACTION")
+        end
+
+        -- Disable first person
+        DisableFirstPersonCamThisFrame()
+
+        Wait(0)
+    end
+
+    -- Reset walk style and ped variables
+    ResetCrouch()
 end
 
 ---Starts crouching
@@ -160,7 +158,7 @@ local function StartCrouch()
     SetPedMovementClipset(playerPed, "move_ped_crouched", 0.6)
     SetPedStrafeClipset(playerPed, "move_ped_crouched_strafing")
 
-    CrouchThread()
+    CreateThread(CrouchLoop)
 end
 
 ---@param playerPed number
