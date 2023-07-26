@@ -172,6 +172,18 @@ local function AttemptCrouch(playerPed)
     end
 end
 
+---Disables a control until it's key has been released
+---@param padIndex integer
+---@param control integer
+local function DisableControlUntilReleased(padIndex, control)
+    CreateThread(function()
+        while IsDisabledControlPressed(padIndex, control) do
+            DisableControlAction(padIndex, control, true)
+            Wait(0)
+        end
+    end)
+end
+
 ---Called when the crouch key is pressed
 local function CrouchKeyPressed()
     -- If we already are doing something, then don't continue
@@ -182,6 +194,14 @@ local function CrouchKeyPressed()
     -- If crouched then stop crouching
     if isCrouched then
         isCrouched = false
+        local crouchKey = GetControlInstructionalButton(0, `+crouch` | 0x80000000, false)
+        local lookBehindKey = GetControlInstructionalButton(0, 26, false)
+
+        -- Disable look behind if the crouch and look behind keys are the same
+        if crouchKey == lookBehindKey then
+            DisableControlUntilReleased(0, 26) -- INPUT_LOOK_BEHIND
+        end
+
         return
     end
 
@@ -191,9 +211,15 @@ local function CrouchKeyPressed()
     if Config.CrouchOverride then
         DisableControlAction(0, 36, true) -- Disable INPUT_DUCK this frame
     else
-        -- Get +crouch and INPUT_DUCK keys
-        local crouchKey = GetControlInstructionalButton(0, 0xD2D0BEBA, false)
+        -- Get +crouch, INPUT_DUCK and INPUT_LOOK_BEHIND keys
+        local crouchKey = GetControlInstructionalButton(0, `+crouch` | 0x80000000, false)
         local duckKey = GetControlInstructionalButton(0, 36, false)
+        local lookBehindKey = GetControlInstructionalButton(0, 26, false)
+
+        -- Disable look behind if the crouch and look behind keys are the same
+        if crouchKey == lookBehindKey then
+            DisableControlUntilReleased(0, 26) -- INPUT_LOOK_BEHIND
+        end
 
         -- If they are the same and we aren't prone, then check if we are in stealth mode and how long ago the last button press was.
         if crouchKey == duckKey and not isProne then
