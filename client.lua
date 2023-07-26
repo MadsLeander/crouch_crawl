@@ -349,97 +349,94 @@ local function CrawlFlip(playerPed)
 end
 
 ---The crawl loop
-local function CrawlThread()
-    CreateThread(function()
-        Wait(400)
+local function CrawlLoop()
+    local forceEnd = false
+    Wait(400)
 
-        local forceEnd = false
+    while isProne do
+        local playerPed = PlayerPedId()
 
-        while isProne do
-            local playerPed = PlayerPedId()
-
-            -- Checks if the player is falling, in vehicle, dead etc.
-            if not CanPlayerCrouchCrawl(playerPed) or IsEntityInWater(playerPed) then
-                ClearPedTasks(playerPed)
-                isProne = false
-                forceEnd = true
-                break
-            end
-
-            -- Handles forwad/backward movement
-            local forward, backwards = IsControlPressed(0, 32), IsControlPressed(0, 33) -- INPUT_MOVE_UP_ONLY, INPUT_MOVE_DOWN_ONLY
-            if not isCrawling then
-                if forward then -- Forward
-                    Crawl(playerPed, proneType, "fwd")
-                elseif backwards then -- Back
-                    Crawl(playerPed, proneType, "bwd")
-                end
-            end
-
-            -- Moving left/right
-            if IsControlPressed(0, 34) then -- INPUT_MOVE_LEFT_ONLY
-                if isCrawling then
-                    local headingDiff = forward and 1.0 or -1.0
-                    SetEntityHeading(playerPed, GetEntityHeading(playerPed) + headingDiff)
-                else
-                    inAction = true
-                    if proneType == "onfront" then
-                        local playerCoords = GetEntityCoords(playerPed)
-                        TaskPlayAnimAdvanced(playerPed, "move_crawlprone2crawlfront", "left", playerCoords.x, playerCoords.y, playerCoords.z, 0.0, 0.0, GetEntityHeading(playerPed), 2.0, 2.0, -1, 2, 0.1, false, false)
-                        ChangeHeadingSmooth(playerPed, -10.0, 300)
-                        Wait(700)
-                    else
-                        PlayAnimOnce(playerPed, "get_up@directional_sweep@combat@pistol@left", "left_to_prone")
-                        ChangeHeadingSmooth(playerPed, 25.0, 400)
-                        PlayIdleCrawlAnim(playerPed)
-                        Wait(600)
-                    end
-                    inAction = false
-                end
-            elseif IsControlPressed(0, 35) then -- INPUT_MOVE_RIGHT_ONLY
-                if isCrawling then
-                    local headingDiff = backwards and 1.0 or -1.0
-                    SetEntityHeading(playerPed, GetEntityHeading(playerPed) + headingDiff)
-                else
-                    inAction = true
-                    if proneType == "onfront" then
-                        local playerCoords = GetEntityCoords(playerPed)
-                        TaskPlayAnimAdvanced(playerPed, "move_crawlprone2crawlfront", "right", playerCoords.x, playerCoords.y, playerCoords.z, 0.0, 0.0, GetEntityHeading(playerPed), 2.0, 2.0, -1, 2, 0.1, false, false)
-                        ChangeHeadingSmooth(playerPed, 10.0, 300)
-                        Wait(700)
-                    else
-                        PlayAnimOnce(playerPed, "get_up@directional_sweep@combat@pistol@right", "right_to_prone")
-                        ChangeHeadingSmooth(playerPed, -25.0, 400)
-                        PlayIdleCrawlAnim(playerPed)
-                        Wait(600)
-                    end
-                    inAction = false
-                end
-            end
-
-            -- Flipping around
-            if not isCrawling then
-                if IsControlPressed(0, 22) then -- INPUT_JUMP
-                    CrawlFlip(playerPed)
-                end
-            end
-
-            Wait(0)
+        -- Checks if the player is falling, in vehicle, dead etc.
+        if not CanPlayerCrouchCrawl(playerPed) or IsEntityInWater(playerPed) then
+            ClearPedTasks(playerPed)
+            isProne = false
+            forceEnd = true
+            break
         end
 
-        -- If the crawling wasn't forcefully ended, then play the get up animations
-        PlayExitCrawlAnims(forceEnd)
+        -- Handles forwad/backward movement
+        local forward, backwards = IsControlPressed(0, 32), IsControlPressed(0, 33) -- INPUT_MOVE_UP_ONLY, INPUT_MOVE_DOWN_ONLY
+        if not isCrawling then
+            if forward then -- Forward
+                Crawl(playerPed, proneType, "fwd")
+            elseif backwards then -- Back
+                Crawl(playerPed, proneType, "bwd")
+            end
+        end
 
-        -- Reset variabels
-        isCrawling = false
-        inAction = false
-        proneType = "onfront"
-        SetPedConfigFlag(PlayerPedId(), 48, false) -- CPED_CONFIG_FLAG_BlockWeaponSwitching
+        -- Moving left/right
+        if IsControlPressed(0, 34) then -- INPUT_MOVE_LEFT_ONLY
+            if isCrawling then
+                local headingDiff = forward and 1.0 or -1.0
+                SetEntityHeading(playerPed, GetEntityHeading(playerPed) + headingDiff)
+            else
+                inAction = true
+                if proneType == "onfront" then
+                    local playerCoords = GetEntityCoords(playerPed)
+                    TaskPlayAnimAdvanced(playerPed, "move_crawlprone2crawlfront", "left", playerCoords.x, playerCoords.y, playerCoords.z, 0.0, 0.0, GetEntityHeading(playerPed), 2.0, 2.0, -1, 2, 0.1, false, false)
+                    ChangeHeadingSmooth(playerPed, -10.0, 300)
+                    Wait(700)
+                else
+                    PlayAnimOnce(playerPed, "get_up@directional_sweep@combat@pistol@left", "left_to_prone")
+                    ChangeHeadingSmooth(playerPed, 25.0, 400)
+                    PlayIdleCrawlAnim(playerPed)
+                    Wait(600)
+                end
+                inAction = false
+            end
+        elseif IsControlPressed(0, 35) then -- INPUT_MOVE_RIGHT_ONLY
+            if isCrawling then
+                local headingDiff = backwards and 1.0 or -1.0
+                SetEntityHeading(playerPed, GetEntityHeading(playerPed) + headingDiff)
+            else
+                inAction = true
+                if proneType == "onfront" then
+                    local playerCoords = GetEntityCoords(playerPed)
+                    TaskPlayAnimAdvanced(playerPed, "move_crawlprone2crawlfront", "right", playerCoords.x, playerCoords.y, playerCoords.z, 0.0, 0.0, GetEntityHeading(playerPed), 2.0, 2.0, -1, 2, 0.1, false, false)
+                    ChangeHeadingSmooth(playerPed, 10.0, 300)
+                    Wait(700)
+                else
+                    PlayAnimOnce(playerPed, "get_up@directional_sweep@combat@pistol@right", "right_to_prone")
+                    ChangeHeadingSmooth(playerPed, -25.0, 400)
+                    PlayIdleCrawlAnim(playerPed)
+                    Wait(600)
+                end
+                inAction = false
+            end
+        end
 
-        -- Unload animation dictionaries
-        RemoveAnimDict("move_crawl")
-        RemoveAnimDict("move_crawlprone2crawlfront")
-    end)
+        -- Flipping around
+        if not isCrawling then
+            if IsControlPressed(0, 22) then -- INPUT_JUMP
+                CrawlFlip(playerPed)
+            end
+        end
+
+        Wait(0)
+    end
+
+    -- If the crawling wasn't forcefully ended, then play the get up animations
+    PlayExitCrawlAnims(forceEnd)
+
+    -- Reset variabels
+    isCrawling = false
+    inAction = false
+    proneType = "onfront"
+    SetPedConfigFlag(PlayerPedId(), 48, false) -- CPED_CONFIG_FLAG_BlockWeaponSwitching
+
+    -- Unload animation dictionaries
+    RemoveAnimDict("move_crawl")
+    RemoveAnimDict("move_crawlprone2crawlfront")
 end
 
 ---Gets called when the crawl key is pressed
@@ -506,9 +503,9 @@ local function CrawlKeyPressed()
     if CanPlayerCrouchCrawl(playerPed) and not IsEntityInWater(playerPed) then
         PlayIdleCrawlAnim(playerPed, nil, 3.0)
     end
-    inAction = false
 
-    CrawlThread()
+    inAction = false
+    CreateThread(CrawlLoop)
 end
 
 
