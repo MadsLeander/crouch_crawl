@@ -208,6 +208,11 @@ local function CrouchKeyPressed()
     -- Get the player ped
     local playerPed = PlayerPedId()
 
+    -- Check if we can actually crouch and check if the player ped is humanoid
+    if not CanPlayerCrouchCrawl(playerPed) or not IsPedHuman(playerPed) then
+        return
+    end
+
     if Config.CrouchOverride then
         DisableControlAction(0, 36, true) -- Disable INPUT_DUCK this frame
     else
@@ -229,16 +234,18 @@ local function CrouchKeyPressed()
             if GetPedStealthMovement(playerPed) == 1 and timer - lastKeyPress < 1000 then
                 DisableControlAction(0, 36, true) -- Disable INPUT_DUCK this frame
                 lastKeyPress = 0
-                AttemptCrouch(playerPed)
+            else
+                lastKeyPress = timer
                 return
             end
-            lastKeyPress = timer
-            return
         end
     end
 
-    -- Attempt to crouch, if we were successful, then also check if we are prone, if so then play an animaiton
-    if AttemptCrouch(playerPed) and isProne then
+    -- Start to crouch
+    StartCrouch()
+
+    -- If we are prone play an animation from prone to crouch
+    if isProne then
         inAction = true
         isProne = false
         PlayAnimOnce(playerPed, "get_up@directional@transition@prone_to_knees@crawl", "front", nil, nil, 780)
