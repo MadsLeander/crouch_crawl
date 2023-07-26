@@ -213,21 +213,21 @@ local function CrouchKeyPressed()
         return
     end
 
-    if Config.CrouchOverride then
-        DisableControlAction(0, 36, true) -- Disable INPUT_DUCK this frame
-    else
-        -- Get +crouch, INPUT_DUCK and INPUT_LOOK_BEHIND keys
-        local crouchKey = GetControlInstructionalButton(0, `+crouch` | 0x80000000, false)
-        local duckKey = GetControlInstructionalButton(0, 36, false)
-        local lookBehindKey = GetControlInstructionalButton(0, 26, false)
+    -- Get +crouch, INPUT_DUCK and INPUT_LOOK_BEHIND keys
+    local crouchKey = GetControlInstructionalButton(0, `+crouch` | 0x80000000, false)
+    local lookBehindKey = GetControlInstructionalButton(0, 26, false)
+    local duckKey = GetControlInstructionalButton(0, 36, false)
 
-        -- Disable look behind if the crouch and look behind keys are the same
-        if crouchKey == lookBehindKey then
-            DisableControlUntilReleased(0, 26) -- INPUT_LOOK_BEHIND
-        end
+    -- Disable look behind if the crouch and look behind keys are the same
+    if crouchKey == lookBehindKey then
+        DisableControlUntilReleased(0, 26) -- INPUT_LOOK_BEHIND
+    end
 
-        -- If they are the same and we aren't prone, then check if we are in stealth mode and how long ago the last button press was.
-        if crouchKey == duckKey and not isProne then
+    -- If the crouch and duck key are the same
+    if crouchKey == duckKey then
+        if Config.CrouchOverrideStealthMode then
+            DisableControlAction(0, 36, true) -- Disable INPUT_DUCK this frame
+        elseif not isProne then
             local timer = GetGameTimer()
 
             -- If we are in stealth mode and we have already pressed the button in the last second
