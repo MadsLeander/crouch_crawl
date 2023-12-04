@@ -22,16 +22,16 @@ end
 
 ---Load animation dictionary
 ---@param dict string
-function LoadAnimDict(dict)
+local function LoadAnimDict(dict)
     RequestAnimDict(dict)
     while not HasAnimDictLoaded(dict) do
-		Citizen.Wait(0)
+		Wait(0)
 	end
 end
 
 ---Loads clipset/walkstyle
 ---@param clipset string
-function LoadClipSet(clipset)
+local function LoadClipSet(clipset)
     RequestClipSet(clipset)
     while not HasClipSetLoaded(clipset) do
         Wait(0)
@@ -40,7 +40,7 @@ end
 
 ---Sets clipset/walkstyle
 ---@param clipset string
-function SetPlayerClipset(clipset)
+local function SetPlayerClipset(clipset)
     LoadClipSet(clipset)
     SetPedMovementClipset(PlayerPedId(), clipset, 0.5)
     RemoveClipSet(clipset)
