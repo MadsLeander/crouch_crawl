@@ -197,7 +197,7 @@ local function CrouchKeyPressed()
     if isCrouched then
         isCrouched = false
         local crouchKey = GetControlInstructionalButton(0, `+crouch` | 0x80000000, false)
-        local lookBehindKey = GetControlInstructionalButton(0, 26, false)
+        local lookBehindKey = GetControlInstructionalButton(0, 26, false) -- INPUT_LOOK_BEHIND
 
         -- Disable look behind if the crouch and look behind keys are the same
         if crouchKey == lookBehindKey then
@@ -215,10 +215,10 @@ local function CrouchKeyPressed()
         return
     end
 
-    -- Get +crouch, INPUT_DUCK and INPUT_LOOK_BEHIND keys
+    -- Get +crouch, INPUT_LOOK_BEHIND and INPUT_DUCK controls
     local crouchKey = GetControlInstructionalButton(0, `+crouch` | 0x80000000, false)
-    local lookBehindKey = GetControlInstructionalButton(0, 26, false)
-    local duckKey = GetControlInstructionalButton(0, 36, false)
+    local lookBehindKey = GetControlInstructionalButton(0, 26, false) -- INPUT_LOOK_BEHIND
+    local duckKey = GetControlInstructionalButton(0, 36, false) -- INPUT_DUCK
 
     -- Disable look behind if the crouch and look behind keys are the same
     if crouchKey == lookBehindKey then
