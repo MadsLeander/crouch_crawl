@@ -8,6 +8,7 @@ local walkstyle = nil
 
 
 -- Utils --
+
 ---Checks if the player should be able to crawl or not
 ---@param playerPed number
 ---@return boolean
@@ -83,6 +84,7 @@ end
 
 
 -- Crouching --
+
 ---Resets the crouch effect (clipsets etc.)
 local function ResetCrouch()
     local playerPed = PlayerPedId()
@@ -256,6 +258,7 @@ end
 
 
 -- Crawling --
+
 ---@param playerPed number
 ---@return boolean
 local function ShouldPlayerDiveToCrawl(playerPed)
@@ -514,7 +517,7 @@ CreateThread(function()
     if Config.CrouchKeybindEnabled then
         RegisterKeyMapping('+crouch', Config.Localization['crouch_keymapping'], "keyboard", Config.CrouchKeybind)
         RegisterCommand('+crouch', function() CrouchKeyPressed() end, false)
-        RegisterCommand('-crouch', function() end, false) -- This needs to be here to prevent errors/warnings
+        RegisterCommand('-crouch', function() end, false) -- This needs to be here to prevent warnings in chat
     end
     RegisterCommand('crouch', function()
         if isCrouched then
@@ -529,7 +532,7 @@ CreateThread(function()
     if Config.CrawlKeybindEnabled then
         RegisterKeyMapping('+crawl', Config.Localization['crawl_keymapping'], "keyboard", Config.CrawlKeybind)
         RegisterCommand('+crawl', function() CrawlKeyPressed() end, false)
-        RegisterCommand('-crawl', function() end, false) -- This needs to be here to prevent errors/warnings
+        RegisterCommand('-crawl', function() end, false) -- This needs to be here to prevent warnings in chat
     end
     RegisterCommand('crawl', function() CrawlKeyPressed() end, false)
     TriggerEvent('chat:addSuggestion', '/crouch', Config.Localization['crawl_chat_suggestion'])
