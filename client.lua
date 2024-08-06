@@ -193,6 +193,11 @@ local function CrouchKeyPressed()
         return
     end
 
+    -- Don't start/stop crouching if we are in the pause menu or the NUI is in focus
+    if IsPauseMenuActive() or IsNuiFocused() then
+        return
+    end
+
     -- If crouched then stop crouching
     if isCrouched then
         isCrouched = false
@@ -449,8 +454,8 @@ local function CrawlKeyPressed()
         return
     end
 
-    -- Don't start/stop to crawl if we are in the pause menu
-    if IsPauseMenuActive() then
+    -- Don't start/stop to crawl if we are in the pause menu or the NUI is in focus
+    if IsPauseMenuActive() or IsNuiFocused() then
         return
     end
 
