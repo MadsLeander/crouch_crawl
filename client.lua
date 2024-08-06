@@ -135,6 +135,8 @@ local function CrouchLoop()
         Wait(0)
     end
 
+    TriggerEvent('crouch_crawl:onCrouch', false)
+
     -- Reset walk style and ped variables
     ResetCrouch()
 end
@@ -159,6 +161,9 @@ local function StartCrouch()
     walkstyle = GetPedWalkstyle(playerPed) or walkstyle
     SetPedMovementClipset(playerPed, "move_ped_crouched", 0.6)
     SetPedStrafeClipset(playerPed, "move_ped_crouched_strafing")
+
+    -- For other scripts to use
+    TriggerEvent('crouch_crawl:onCrouch', true)
 
     CreateThread(CrouchLoop)
 end
@@ -433,6 +438,8 @@ local function CrawlLoop()
         Wait(0)
     end
 
+    TriggerEvent('crouch_crawl:onCrawl', false)
+
     -- If the crawling wasn't forcefully ended, then play the get up animations
     PlayExitCrawlAnims(forceEnd)
 
@@ -511,6 +518,8 @@ local function CrawlKeyPressed()
     if CanPlayerCrouchCrawl(playerPed) and not IsEntityInWater(playerPed) then
         PlayIdleCrawlAnim(playerPed, nil, 3.0)
     end
+
+    TriggerEvent('crouch_crawl:onCrawl', true)
 
     inAction = false
     CreateThread(CrawlLoop)
