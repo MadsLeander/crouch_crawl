@@ -534,38 +534,36 @@ end
 
 
 -- Commands & KeyMapping --
-CreateThread(function()
-    if Config.CrouchEnabled then
-        if Config.CrouchKeybindEnabled then
-            RegisterKeyMapping('+crouch', Config.Localization['crouch_keymapping'], 'keyboard', Config.CrouchKeybind)
-            RegisterCommand('+crouch', function() CrouchKeyPressed() end, false)
-            RegisterCommand('-crouch', function() end, false) -- This needs to be here to prevent warnings in chat
-        end
-        RegisterCommand('crouch', function()
-            if isCrouched then
-                isCrouched = false
-                return
-            end
-
-            AttemptCrouch(PlayerPedId())
-        end, false)
-        TriggerEvent('chat:addSuggestion', '/crouch', Config.Localization['crouch_chat_suggestion'])
+if Config.CrouchEnabled then
+    if Config.CrouchKeybindEnabled then
+        RegisterKeyMapping('+crouch', Config.Localization['crouch_keymapping'], 'keyboard', Config.CrouchKeybind)
+        RegisterCommand('+crouch', function() CrouchKeyPressed() end, false)
+        RegisterCommand('-crouch', function() end, false) -- This needs to be here to prevent warnings in chat
     end
-
-    if Config.CrawlEnabled then
-        if Config.CrawlKeybindEnabled then
-            RegisterKeyMapping('+crawl', Config.Localization['crawl_keymapping'], 'keyboard', Config.CrawlKeybind)
-            RegisterCommand('+crawl', function() CrawlKeyPressed() end, false)
-            RegisterCommand('-crawl', function() end, false) -- This needs to be here to prevent warnings in chat
+    RegisterCommand('crouch', function()
+        if isCrouched then
+            isCrouched = false
+            return
         end
-        RegisterCommand('crawl', function() CrawlKeyPressed() end, false)
-        TriggerEvent('chat:addSuggestion', '/crawl', Config.Localization['crawl_chat_suggestion'])
+
+        AttemptCrouch(PlayerPedId())
+    end, false)
+    TriggerEvent('chat:addSuggestion', '/crouch', Config.Localization['crouch_chat_suggestion'])
+end
+
+if Config.CrawlEnabled then
+    if Config.CrawlKeybindEnabled then
+        RegisterKeyMapping('+crawl', Config.Localization['crawl_keymapping'], 'keyboard', Config.CrawlKeybind)
+        RegisterCommand('+crawl', function() CrawlKeyPressed() end, false)
+        RegisterCommand('-crawl', function() end, false) -- This needs to be here to prevent warnings in chat
     end
-end)
+    RegisterCommand('crawl', function() CrawlKeyPressed() end, false)
+    TriggerEvent('chat:addSuggestion', '/crawl', Config.Localization['crawl_chat_suggestion'])
+end
 
 
 -- Exports --
----Returns if player is crouched
+---Returns if the player is crouched
 ---@return boolean
 local function IsPlayerCrouched()
 	return isCrouched
