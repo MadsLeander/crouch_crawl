@@ -5,6 +5,7 @@ local inAction = false
 local proneType = 'onfront'
 local lastKeyPress = 0
 local walkstyle = nil
+local forceEndProne = false
 
 
 -- Utils --
@@ -279,6 +280,13 @@ local function ShouldPlayerDiveToCrawl(playerPed)
     return false
 end
 
+---Stops the player from being prone
+---@param force boolean If forced then no exit anim is played
+local function stopPlayerProne(force)
+    isProne = false
+    forceEndProne = force
+end
+
 ---@param playerPed number
 ---@param heading number|nil
 ---@param blendInSpeed number|nil
@@ -363,7 +371,6 @@ end
 
 ---The crawl loop
 local function CrawlLoop()
-    local forceEnd = false
     Wait(400)
 
     while isProne do
@@ -372,8 +379,7 @@ local function CrawlLoop()
         -- Checks if the player is falling, in vehicle, dead etc.
         if not CanPlayerCrouchCrawl(playerPed) or IsEntityInWater(playerPed) then
             ClearPedTasks(playerPed)
-            isProne = false
-            forceEnd = true
+            stopPlayerProne(true)
             break
         end
 
@@ -441,11 +447,12 @@ local function CrawlLoop()
     TriggerEvent('crouch_crawl:onCrawl', false)
 
     -- If the crawling wasn't forcefully ended, then play the get up animations
-    PlayExitCrawlAnims(forceEnd)
+    PlayExitCrawlAnims(forceEndProne)
 
     -- Reset variabels
     isCrawling = false
     inAction = false
+    forceEndProne = false
     proneType = 'onfront'
     SetPedConfigFlag(PlayerPedId(), 48, false) -- CPED_CONFIG_FLAG_BlockWeaponSwitching
 
@@ -563,26 +570,28 @@ end)
 local function IsPlayerCrouched()
 	return isCrouched
 end
+exports('IsPlayerCrouched', IsPlayerCrouched)
 
 ---Returns if the player is prone (both when laying still and when moving)
 ---@return boolean
 local function IsPlayerProne()
 	return isProne
 end
+exports('IsPlayerProne', IsPlayerProne)
 
 ---Returns if the player is crawling (only when moving forward/backward)
 ---@return boolean
 local function IsPlayerCrawling()
 	return isCrawling
 end
+exports('IsPlayerCrawling', IsPlayerCrawling)
 
 ---Returns either "onfront" or "onback", this can be used to check if the player is on his back or on his stomach. NOTE: This will still return a string even if the player is not prone. Use IsPlayerProne() to check if the player is prone.
 ---@return string
 local function GetPlayerProneType()
 	return proneType
 end
-
-exports('IsPlayerCrouched', IsPlayerCrouched)
-exports('IsPlayerProne', IsPlayerProne)
-exports('IsPlayerCrawling', IsPlayerCrawling)
 exports('GetPlayerProneType', GetPlayerProneType)
+
+-- Usefull to call if hte player gets handcuffed etc.
+exports('StopPlayerProne', stopPlayerProne)
