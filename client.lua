@@ -83,6 +83,20 @@ local function ChangeHeadingSmooth(ped, amount, time)
     end
 end
 
+---Returns if the ped is using stealthy movement
+---@param ped integer
+---@return boolean
+local function IsPedUsingStealthMovement(ped)
+    local state = GetPedStealthMovement(ped)
+
+    -- The return value seems to have changed from a integer to a boolean at some point, we check both to keep backwards compatiblity
+    if state == 1 or state == true then
+        return true
+    end
+
+    return false
+end
+
 
 -- Crouching --
 
@@ -149,8 +163,8 @@ local function StartCrouch()
     local playerPed = PlayerPedId()
 
     -- Force leave stealth mode
-    if GetPedStealthMovement(playerPed) == 1 then
         SetPedStealthMovement(playerPed, false, 'DEFAULT_ACTION')
+    if IsPedUsingStealthMovement(playerPed) then
         Wait(100)
     end
 
@@ -244,7 +258,7 @@ local function CrouchKeyPressed()
             local timer = GetGameTimer()
 
             -- If we are in stealth mode and we have already pressed the button in the last second
-            if GetPedStealthMovement(playerPed) == 1 and timer - lastKeyPress < 1000 then
+            if IsPedUsingStealthMovement(playerPed) and timer - lastKeyPress < 1000 then
                 DisableControlAction(0, 36, true) -- Disable INPUT_DUCK this frame
                 lastKeyPress = 0
             else
@@ -501,8 +515,8 @@ local function CrawlKeyPressed()
     SetPedConfigFlag(playerPed, 48, true) -- CPED_CONFIG_FLAG_BlockWeaponSwitching
 
     -- Force leave stealth mode
-    if GetPedStealthMovement(playerPed) == 1 then
         SetPedStealthMovement(playerPed, false, 'DEFAULT_ACTION')
+    if IsPedUsingStealthMovement(playerPed) then
         Wait(100)
     end
 
