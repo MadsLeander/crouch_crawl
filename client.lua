@@ -163,8 +163,8 @@ local function StartCrouch()
     local playerPed = PlayerPedId()
 
     -- Force leave stealth mode
-        SetPedStealthMovement(playerPed, false, 'DEFAULT_ACTION')
     if IsPedUsingStealthMovement(playerPed) then
+        SetPedStealthMovement(playerPed, false, 'DEFAULT_ACTION')
         Wait(100)
     end
 
@@ -174,11 +174,11 @@ local function StartCrouch()
     end
 
     walkstyle = GetPedWalkstyle(playerPed) or walkstyle
-    SetPedMovementClipset(playerPed, 'move_ped_crouched', 0.6)
-    SetPedStrafeClipset(playerPed, 'move_ped_crouched_strafing')
 
     -- For other scripts to use
     TriggerEvent('crouch_crawl:onCrouch', true)
+    SetPedMovementClipset(playerPed, 'move_ped_crouched', 0.6)
+    SetPedStrafeClipset(playerPed, 'move_ped_crouched_strafing')
 
     CreateThread(CrouchLoop)
 end
@@ -515,8 +515,8 @@ local function CrawlKeyPressed()
     SetPedConfigFlag(playerPed, 48, true) -- CPED_CONFIG_FLAG_BlockWeaponSwitching
 
     -- Force leave stealth mode
-        SetPedStealthMovement(playerPed, false, 'DEFAULT_ACTION')
     if IsPedUsingStealthMovement(playerPed) then
+        SetPedStealthMovement(playerPed, false, 'DEFAULT_ACTION')
         Wait(100)
     end
 
