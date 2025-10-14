@@ -3,6 +3,8 @@
 ## About
 Crouch & Crawl is a standalone resource that allows you to crouch and crawl (duh!). It differs from other similar scripts by having better/more animations, no standing up while crouching, keeping your walkstyle, as well as many small bug fixes.
 
+You can watch a breif showcase of the script on [YouTube](https://www.youtube.com/watch?v=TdxSXtIzNKQ).
+
 **Included in RPEmotes**  
 This resource is already included in [RPEmotes Reborn](https://github.com/alberttheprince/rpemotes-reborn), so if you already use RPEmotes, then simply make sure that you are on the newest version and that Config.CrouchEnabled or Config.CrawlEnabled is set to true.
 
