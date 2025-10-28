@@ -151,6 +151,7 @@ local function CrouchLoop()
     end
 
     TriggerEvent('crouch_crawl:onCrouch', false)
+    LocalPlayer.state.isCrouched = false
 
     -- Reset walk style and ped variables
     ResetCrouch()
@@ -175,10 +176,12 @@ local function StartCrouch()
 
     walkstyle = GetPedWalkstyle(playerPed) or walkstyle
 
-    -- For other scripts to use
-    TriggerEvent('crouch_crawl:onCrouch', true)
     SetPedMovementClipset(playerPed, 'move_ped_crouched', 0.6)
     SetPedStrafeClipset(playerPed, 'move_ped_crouched_strafing')
+
+    -- For other scripts to use
+    TriggerEvent('crouch_crawl:onCrouch', true)
+    LocalPlayer.state.isCrouched = true
 
     CreateThread(CrouchLoop)
 end
@@ -459,6 +462,7 @@ local function CrawlLoop()
     end
 
     TriggerEvent('crouch_crawl:onCrawl', false)
+    LocalPlayer.state.isProne = false
 
     -- If the crawling wasn't forcefully ended, then play the get up animations
     PlayExitCrawlAnims(forceEndProne)
@@ -541,6 +545,7 @@ local function CrawlKeyPressed()
     end
 
     TriggerEvent('crouch_crawl:onCrawl', true)
+    LocalPlayer.state.isProne = true
 
     inAction = false
     CreateThread(CrawlLoop)

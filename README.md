@@ -54,6 +54,14 @@ There are 5 exports included with the script (all are client).
 | GetPlayerProneType | Returns if the player is on his back or front | None | String |
 | StopPlayerProne | Stops the player prone | force: boolean | Void |
 
+## State Bags
+If using version 1.0.2 or newer you will be able to use state bags to check if the player is crouching or prone.
+
+```lua
+print("isCrouched", LocalPlayer.state.isCrouched)
+print("isProne", LocalPlayer.state.isProne)
+```
+
 ## Contributers
 These are people who helped out developing the resource, a big thanks go to them!
 
